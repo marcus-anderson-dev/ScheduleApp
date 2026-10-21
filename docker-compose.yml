@@ -1,0 +1,21 @@
+# Uses: docker compose up -d
+# The user/password/port match the conn string in ScheduleApp/Db.cs.
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: schedule-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: client_schedule
+      MYSQL_USER: sqlUser
+      MYSQL_PASSWORD: Passw0rd!
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./setup.sql:/docker-entrypoint-initdb.d/02-setup.sql:ro
+      - schedule-data:/var/lib/mysql
+
+volumes:
+  schedule-data:
